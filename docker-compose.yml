@@ -1,0 +1,97 @@
+#
+#    This file is part of Centralized.
+#
+#    Centralized is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    Centralized is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with Centralized.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+version: '2.2'
+services:
+  nginxssl:
+    build:
+      context: .
+      dockerfile: dockerfiles/nginxssl.dockerfile
+    image: centralized_nginx
+    container_name: centralized_nginx
+    hostname: centralized_nginx 
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - centralized_data:/etc/centralized
+    depends_on:
+      - centralized_api
+
+  centralized_api:
+    build:
+      context: .
+      dockerfile: dockerfiles/api.dockerfile
+    image: centralized_api
+    container_name: centralized_api
+    hostname: centralized_api
+    extends:
+      file: base.yml
+      service: base
+    depends_on:
+      - db
+    command: db:5432
+    ports:
+      - 3333:3333
+    volumes:
+      - centralized_data:/etc/centralized
+      - /tmp/centralized:/tmp/centralized
+
+  connector:
+    image: centralized_api
+    container_name: centralized_connector
+    hostname: centralized_connector
+    extends:
+      file: base.yml
+      service: base
+    entrypoint: ["/opt/wait-for-it.sh", "centralized_api:3333", "--", "/opt/init_connector.sh"]
+    volumes:
+      - centralized_data:/etc/centralized 
+
+  db:
+    build:
+      context: .
+      dockerfile: dockerfiles/pg.dockerfile
+    image: centralized_db
+    container_name: centralized_db
+    hostname: centralized_db
+    depends_on:
+      - init
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - "5432:5432"
+    volumes:
+      - centralized_db:/var/lib/postgresql/data
+
+  init:
+    build:
+      context: .
+      dockerfile: dockerfiles/init.dockerfile
+    image: centralized_init
+    container_name: centralized_init
+    hostname: centralized_init
+    volumes:
+      - centralized_data:/etc/centralized
+    entrypoint:
+      - /opt/init.sh
+
+volumes:
+    centralized_data:
+    centralized_db:
+

@@ -1,0 +1,8 @@
+DATABASES = {
+    'default': {
+        'migrations_dir': '/opt/migrations/',
+        'engine': 'postgres',
+        'dsn': 'host=db dbname=DATABASENAME user=USERNAME password=PASSWORD',
+   }
+}
+

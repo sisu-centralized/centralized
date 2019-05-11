@@ -1,0 +1,6 @@
+version: '2.2'
+
+services:
+  base:
+    env_file: configuration.env
+

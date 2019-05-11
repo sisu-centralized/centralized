@@ -1,0 +1,12 @@
+centralizedadmin (0.2-1) stable; urgency=low
+
+  * Changed registration from using username and password to organization UUID.
+
+ -- Pierre Ancelot <contact@centralized.pw>  Thu, 18 Oct 2018 22:05:00 +0300
+
+centralizedadmin (0.1-1) stable; urgency=low
+
+  * Initial release
+
+ -- Pierre Ancelot <contact@centralized.pw>  Wed, 10 Oct 2018 20:21:00 +0300
+
