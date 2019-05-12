@@ -25,7 +25,7 @@ from github import Github
 from pprint import pprint
 from importlib.machinery import SourceFileLoader
 
-config_file = "/config.json"
+config_file = "/etc/centralized/config.json"
 
 with open(config_file) as f:
     conf = json.load(f)

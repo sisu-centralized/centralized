@@ -33,6 +33,10 @@ EOL
     touch /etc/centralized/inited.connectors
 fi
 
+sed -r "s/DATABASENAME/$POSTGRES_DB/"       -i /opt/config
+sed -r "s/USERNAME/$POSTGRES_USER/"     -i /opt/config
+sed -r "s/PASSWORD/$POSTGRES_PASSWORD/" -i /opt/config
+
 min=$(shuf -i0-9 -n1)
 minutes="0$min,1$min,2$min,3$min,4$min,5$min"
 
