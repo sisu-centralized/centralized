@@ -18,7 +18,10 @@
 version: '2.2'
 services:
   nginxssl:
-    image: centralized/nginx:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/nginxssl.dockerfile
+    image: centralized_nginx
     container_name: centralized_nginx
     hostname: centralized_nginx 
     ports:
@@ -30,7 +33,10 @@ services:
       - centralized_api
 
   centralized_api:
-    image: centralized/api:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/api.dockerfile
+    image: centralized_api
     container_name: centralized_api
     hostname: centralized_api
     extends:
@@ -46,7 +52,7 @@ services:
       - /tmp/centralized:/tmp/centralized
 
   connector:
-    image: centralized/api:latest
+    image: centralized_api
     container_name: centralized_connector
     hostname: centralized_connector
     extends:
@@ -57,7 +63,10 @@ services:
       - centralized_data:/etc/centralized 
 
   db:
-    image: centralized/db:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/pg.dockerfile
+    image: centralized_db
     container_name: centralized_db
     hostname: centralized_db
     depends_on:
@@ -71,7 +80,10 @@ services:
       - centralized_db:/var/lib/postgresql/data
 
   init:
-    image: centralized/init:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/init.dockerfile
+    image: centralized_init
     container_name: centralized_init
     hostname: centralized_init
     volumes:
