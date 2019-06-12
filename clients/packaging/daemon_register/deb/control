@@ -1,4 +1,4 @@
-Package: centralized
+Package: centralizeddaemon
 Version: 0.2
 Maintainer: Pierre Ancelot
 Architecture: all

@@ -18,32 +18,32 @@
 
 set -x
 
-[ -d centralized ] && rm -rf centralized
+[ -d centralizeddaemon ] && rm -rf centralizeddaemon
 rm *.deb
 
 set -e
 
-mkdir -p centralized/DEBIAN
-mkdir -p centralized/etc/centralized
-mkdir -p centralized/usr/local/bin
-install -m 0755 control  centralized/DEBIAN/
-install -m 0755 debian/changelog  centralized/DEBIAN/
+mkdir -p centralizeddaemon/DEBIAN
+mkdir -p centralizeddaemon/etc/centralized
+mkdir -p centralizeddaemon/usr/local/bin
+install -m 0755 control  centralizeddaemon/DEBIAN/
+install -m 0755 debian/changelog  centralizeddaemon/DEBIAN/
 
 #install -m 0755 -o root -g root postinst centralized/DEBIAN/
-cp postinst centralized/DEBIAN/
-chmod +x centralized/DEBIAN/postinst
+cp postinst centralizeddaemon/DEBIAN/
+chmod +x centralizeddaemon/DEBIAN/postinst
 
-cp postrm centralized/DEBIAN/
-chmod +x centralized/DEBIAN/postrm
+cp postrm centralizeddaemon/DEBIAN/
+chmod +x centralizeddaemon/DEBIAN/postrm
 
 pushd ../../..
 pwd
-install -m 0755 readconfig.py                  packaging/daemon_register/deb/centralized/usr/local/bin/
-install -m 0755 centralized_daemon.py          packaging/daemon_register/deb/centralized/usr/local/bin/
-install -m 0755 centralized_register_server.py packaging/daemon_register/deb/centralized/usr/local/bin/
+install -m 0755 readconfig.py                  packaging/daemon_register/deb/centralizeddaemon/usr/local/bin/
+install -m 0755 centralized_daemon.py          packaging/daemon_register/deb/centralizeddaemon/usr/local/bin/
+install -m 0755 centralized_register_server.py packaging/daemon_register/deb/centralizeddaemon/usr/local/bin/
 popd
 
-dpkg-deb --root-owner-group --build centralized
+dpkg-deb --root-owner-group --build centralizeddaemon
 #dpkg-deb --build centralized
-mv centralized.deb $(awk '/^Package:/ { print $2 }' control)_$(dpkg-parsechangelog --show-field version)_$(dpkg-architecture -qDEB_BUILD_ARCH).deb
+mv centralizeddaemon.deb $(awk '/^Package:/ { print $2 }' control)_$(dpkg-parsechangelog --show-field version)_$(dpkg-architecture -qDEB_BUILD_ARCH).deb
 
