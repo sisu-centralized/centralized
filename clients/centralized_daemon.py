@@ -17,7 +17,6 @@
 #
 
 import os
-import requests
 import json
 import pwd
 import grp
@@ -31,6 +30,9 @@ import copy
 
 config = Config()
 conf = config.getconfig()
+config.load_ca()
+import requests
+
 
 url = conf['main']['url']
 

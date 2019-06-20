@@ -18,6 +18,7 @@
 import os
 import sys
 import configparser
+import base64
 
 class Config:
 
@@ -49,6 +50,20 @@ class Config:
         pathrights = oct(os.stat(path).st_mode)
         if pathrights != rights:
             self.die("Improper rights for {}, shall be {} ({}), current: {}".format(path, advertised_desired_rights, rights, pathrights))
+
+    def load_ca(self):
+        ca = base64.b64decode(self.cfg['main']['ca']).decode('utf-8')
+
+        # Handle CA
+        crt_path = '/etc/centralized/.centralized_ca.crt'
+        if not os.path.isfile(crt_path):
+            f = open( crt_path, 'w' )
+            f.write( ca )
+            f.close()
+
+        os.environ['REQUESTS_CA_BUNDLE'] = crt_path
+
+
 
     def getconfig(self):
         return self.cfg

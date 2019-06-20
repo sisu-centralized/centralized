@@ -18,11 +18,9 @@
 #
 
 import os
-import requests
 from requests.auth import HTTPBasicAuth
 import json
 import sys
-
 from readconfig import Config
 
 if len(sys.argv) < 2:
@@ -34,11 +32,14 @@ hostname = sys.argv[1]
 config = Config()
 conf = config.getconfig()
 
+pp.pprint(conf)
+config.load_ca()
+
+import requests
+
 baseurl = conf['main']['url']
 uuid_path = "/.uuid_centralized"
 
-#username = conf['main']['username']
-#password = conf['main']['password']
 organization_uuid = conf['main']['organization_uuid']
 uuid = ""
 
@@ -58,7 +59,10 @@ payload["uuid"] = uuid
 payload["organization_uuid"] = organization_uuid
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+pp.pprint(payload)
+
 
 r = requests.post("{}/server/register".format(baseurl), data=json.dumps(payload)) #, auth=(username, password)) #, headers=headers)
 print(r.text)
+
 
