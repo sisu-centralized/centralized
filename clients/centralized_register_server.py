@@ -32,7 +32,6 @@ hostname = sys.argv[1]
 config = Config()
 conf = config.getconfig()
 
-pp.pprint(conf)
 config.load_ca()
 
 import requests
@@ -59,8 +58,6 @@ payload["uuid"] = uuid
 payload["organization_uuid"] = organization_uuid
 
 headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-pp.pprint(payload)
-
 
 r = requests.post("{}/server/register".format(baseurl), data=json.dumps(payload)) #, auth=(username, password)) #, headers=headers)
 print(r.text)
