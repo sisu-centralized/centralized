@@ -1,0 +1,5 @@
+---
+
+registration_info: "{{ ansible_fqdn }}"
+centralized_api_ip: "10.215.39.1" # IP address API node
+

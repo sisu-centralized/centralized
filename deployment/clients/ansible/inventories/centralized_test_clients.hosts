@@ -1,0 +1,13 @@
+[centralized_test_clients_deployment]
+
+# If you want to test on your machine (and you run ubuntu), I show how I launch it, in lxc containers.
+# Otherwise, you can use VMs, or whatever works for you.
+# If you use lxc, you'll have to push your key.
+
+ubuntu ansible_host=10.215.39.2   # lxc launch ubuntu:16.04 centralized-test-ubuntu1604 
+centos ansible_host=10.215.39.85  # lxc launch images:centos/7 centralized-test-centos7
+
+[clients]
+ubuntu
+centos
+

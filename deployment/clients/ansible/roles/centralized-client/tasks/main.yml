@@ -1,0 +1,112 @@
+---
+# Original author: centralized.pw
+# You can use, copy, modify, redistribute this file as long as those two comments line remain.
+
+- name: Create the directory for the config file.
+  become: yes
+  file:
+    path: /etc/centralized
+    mode: 0700
+    owner: root
+    group: root
+    state: directory
+  tags:
+    - centralized
+
+- name: Create the config file.
+  become: yes
+  copy:
+    src: config.ini
+    dest: /etc/centralized/config.ini
+    mode: 0600
+    owner: root
+    group: root
+  tags:
+    - centralized
+
+- name: Add signing key
+  become: yes
+  apt_key:
+    id: 8CE0F31F61C98A0D3F9F4B496381E0E6F3253AC3
+    url: http://deb.centralized.pw/apt/centralized.gpg.key
+    state: present
+  when: ansible_pkg_mgr == 'apt'
+  tags:
+    - centralized
+
+- name: Download key file
+  become: yes
+  get_url:
+    url: http://deb.centralized.pw/apt/centralized.gpg.key
+    dest: /etc/pki/rpm-gpg/Centralized.gpgkey
+    mode: '0440'
+  when: ansible_pkg_mgr == 'yum'
+  tags:
+    - centralized
+
+- name: Import key
+  become: yes
+  rpm_key:
+    state: present
+    key: /etc/pki/rpm-gpg/Centralized.gpgkey
+  when: ansible_pkg_mgr == 'yum'
+  tags:
+    - centralized
+
+
+
+- name: Add centralized repository (apt).
+  become: yes
+  apt_repository:
+    repo: deb http://deb.centralized.pw/apt/debian stable main
+    state: present
+    update_cache: yes
+  when: ansible_pkg_mgr == 'apt'
+  tags:
+    - centralized
+
+
+- name: Add centralized repository (yum).
+  become: yes
+  template:
+    src: centralized.repo
+    dest: /etc/yum.repos.d/Centralized.repo
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_pkg_mgr == 'yum'
+  tags:
+    - centralized
+
+
+- name: Install centralizeddaemon client.
+  package:
+    name: centralizeddaemon
+    state: present
+  tags:
+    - centralized
+
+- name: update /etc/hosts to resolve the API server.
+  become: yes
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ centralized_api_ip }} auth.centralized.local"
+    regexp: 'auth.centralized.local'
+  tags:
+    - centralized
+
+- name: Checking if the machine was registered already.
+  stat:
+    path: "/.uuid_centralized"
+  register: centralized_registered
+  tags:
+    - centralized
+
+
+- name: Register the server.
+  command: /usr/bin/env python3 /usr/local/bin/centralized_register_server.py "{{ registration_info }}"
+#  when: not centralized_registered.stat.exists
+  tags:
+    - centralized
+
+

@@ -1,0 +1,8 @@
+[centralized]
+name=Centralized
+baseurl=http://deb.centralized.pw/yum/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/Centralized.gpgkey
+
+
