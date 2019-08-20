@@ -37,7 +37,7 @@ RUN chmod -R 777 /opt/*
 
 # Connectors.
 #RUN apt-get install -y libkrb5-dev libldap2-dev libsasl2-dev libssl-dev libffi-dev cron
-RUN pip3 install PyGithub sshpubkeys cookiejar
+RUN pip3 install PyGithub pybitbucket sshpubkeys cookiejar
 ADD connectors /opt/connectors/
 
 EXPOSE 3333/tcp
